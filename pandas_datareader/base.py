@@ -114,13 +114,12 @@ class _BaseReader(object):
             response = self.session.get(url, params=params)
             if response.status_code == requests.codes.ok:
                 return response
+            # If our output error function returns True, exit the loop.
+            if self._output_error(response):
+                break
             time.sleep(self.pause)
         if params is not None and len(params) > 0:
             url = url + "?" + urlencode(params)
-        # If our output error function returns True, exit the loop.
-        if self._output_error(response):
-            break
-
         raise RemoteDataError('Unable to read URL: {0}'.format(url))
 
     def _output_error(self, out):
