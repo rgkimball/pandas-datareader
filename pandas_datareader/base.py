@@ -117,7 +117,19 @@ class _BaseReader(object):
             time.sleep(self.pause)
         if params is not None and len(params) > 0:
             url = url + "?" + urlencode(params)
+        # If our output error function returns True, exit the loop.
+        if self._output_error(response):
+            break
+
         raise RemoteDataError('Unable to read URL: {0}'.format(url))
+
+    def _output_error(self, out):
+        """If necessary, a service can implement an interpreter for any non-200 HTTP responses.
+
+        :param out: raw output from an HTTP request
+        :return: boolean
+        """
+        return False
 
     def _read_lines(self, out):
         rs = read_csv(out, index_col=0, parse_dates=True, na_values='-')[::-1]
