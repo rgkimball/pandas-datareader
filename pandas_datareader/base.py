@@ -123,7 +123,8 @@ class _BaseReader(object):
         raise RemoteDataError('Unable to read URL: {0}'.format(url))
 
     def _output_error(self, out):
-        """If necessary, a service can implement an interpreter for any non-200 HTTP responses.
+        """If necessary, a service can implement an interpreter for any non-200
+         HTTP responses.
 
         :param out: raw output from an HTTP request
         :return: boolean
