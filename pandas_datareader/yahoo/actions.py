@@ -1,3 +1,5 @@
+from __future__ import division
+
 from pandas import (concat, DataFrame)
 from pandas_datareader.yahoo.daily import YahooDailyReader
 
@@ -35,7 +37,11 @@ class YahooActionReader(YahooDailyReader):
             # Only do so if splits is nontrivial, which throws ValueError
             # otherwise
             if len(splits) > 0:
-                splits['value'] = splits.apply(lambda x: 1/eval(x['value']), axis=1)  # noqa
+                splits['value'] = splits.apply(lambda x: 1/eval(
+                    compile(x['value'],
+                        '<string>',
+                        'eval',
+                        division.compiler_flag)), axis=1)  # noqa
 
         output = concat([dividends, splits]).sort_index(ascending=False)
 
