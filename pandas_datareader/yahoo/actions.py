@@ -32,7 +32,10 @@ class YahooActionReader(YahooDailyReader):
             splits = splits.rename(columns={'Stock Splits': 'value'})
             # Converts fractional form splits (i.e. "2/1") into conversion
             # ratios, then take the reciprocal
-            splits['value'] = splits.apply(lambda x: 1/eval(x['value']), axis=1)  # noqa
+            # Only do so if splits is nontrivial, which throws ValueError
+            # otherwise
+            if len(splits) > 0:
+                splits['value'] = splits.apply(lambda x: 1/eval(x['value']), axis=1)  # noqa
 
         output = concat([dividends, splits]).sort_index(ascending=False)
 
